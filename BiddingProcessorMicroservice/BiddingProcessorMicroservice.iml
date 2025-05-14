@@ -8,11 +8,8 @@
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/testResources" type="java-test-resource" />
     </content>
-    <orderEntry type="jdk" jdkName="21" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="17" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
-    <orderEntry type="library" name="io.reactivex.rxjava3.rxkotlin2" level="project" />
-    <orderEntry type="module" module-name="MessageLibrary" />
-    <orderEntry type="library" name="MessageLibrary2" level="project" />
   </component>
 </module>
