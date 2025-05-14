@@ -11,5 +11,7 @@
     <orderEntry type="jdk" jdkName="17" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
+    <orderEntry type="library" name="io.reactivex.rxjava3.rxkotlin" level="project" />
+    <orderEntry type="module" module-name="MessageLibrary" />
   </component>
 </module>
