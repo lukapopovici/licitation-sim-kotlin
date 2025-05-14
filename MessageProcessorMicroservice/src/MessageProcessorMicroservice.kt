@@ -61,21 +61,20 @@ class MessageProcessorMicroservice {
     }
 
     private fun receiveAndProcessMessages() {
-        // se primesc si se adauga in coada mesajele de la AuctioneerMicroservice
         val receiveInQueueSubscription = receiveInQueueObservable
-            ///TODO --- filtrati duplicatele folosind operatorul de filtrare
+            .map { Message.deserialize(it.toByteArray()) }
+            .distinct { "${it.sender}${it.body}" }
             .subscribeBy(
                 onNext = {
-                    val message = Message.deserialize(it.toByteArray())
-                    println(message)
-                    messageQueue.add(message)
+                    println(it)
+                    messageQueue.add(it)
                 },
                 onComplete = {
-                    // s-a incheiat primirea tuturor mesajelor
-                    ///TODO --- se ordoneaza in functie de data si ora cand mesajele au fost primite
 
-                    // s-au primit toate mesajele de la AuctioneerMicroservice, i se trimite un mesaj pentru a semnala
-                    // acest lucru
+                    val sortedMessages = messageQueue.sortedBy { it.timestamp }
+                    messageQueue.clear()
+                    messageQueue.addAll(sortedMessages)
+
                     val finishedMessagesMessage = Message.create(
                         "${auctioneerConnection.localAddress}:${auctioneerConnection.localPort}",
                         "am primit tot"
@@ -83,14 +82,12 @@ class MessageProcessorMicroservice {
                     auctioneerConnection.getOutputStream().write(finishedMessagesMessage.serialize())
                     auctioneerConnection.close()
 
-                    // se trimit mai departe mesajele procesate catre BiddingProcessor
                     sendProcessedMessages()
                 },
                 onError = { println("Eroare: $it") }
             )
         subscriptions.add(receiveInQueueSubscription)
     }
-
     private fun sendProcessedMessages() {
         try {
             biddingProcessorSocket = Socket(BIDDING_PROCESSOR_HOST, BIDDING_PROCESSOR_PORT)
